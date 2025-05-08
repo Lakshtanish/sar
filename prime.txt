@@ -1,0 +1,49 @@
+//------------------Prime Checker -------------------------//
+public class PrimeChecker {
+    public Integer inputNumber { get; set; }
+
+    public void checkPrime() {
+        Boolean isPrime = true;
+
+        if (inputNumber <= 1) {
+            isPrime = false;
+        } else {
+            for (Integer i = 2; i <= Math.sqrt(inputNumber); i++) {
+                if (Math.mod(inputNumber, i) == 0) {
+                    isPrime = false;
+                    break;
+                }
+            }
+        }
+
+        // Output the result to the page
+        if (isPrime) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.INFO, inputNumber + ' is a Prime Number.'));
+        } else {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.INFO, inputNumber + ' is NOT a Prime Number.'));
+        }
+    }
+}
+
+------------UI---------------
+<apex:page controller="PrimeChecker">
+    <h1>Prime Number Checker</h1>
+
+    <!-- Form to input number -->
+    <apex:form >
+        <apex:pageMessages /> <!-- Display success/error messages -->
+
+        <!-- Input field for the number -->
+        <apex:inputText value="{!inputNumber}" label="Enter a number" />
+
+        <!-- Button to call the checkPrime method -->
+        <apex:commandButton value="Check Prime" action="{!checkPrime}" rerender="resultPanel" />
+    </apex:form>
+
+    <!-- Panel to show result -->
+    <apex:outputPanel id="resultPanel">
+        <h3>Result:</h3>
+        <apex:facet name="header">Prime Number Result</apex:facet>
+        <apex:pageMessages />
+    </apex:outputPanel>
+</apex:page>

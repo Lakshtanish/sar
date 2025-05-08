@@ -1,0 +1,77 @@
+//------------------Currency Converter -------------------------//
+public class CurrencyConverter
+{
+    public Decimal amount {get; set;}
+    public String fromCurrency {get; set;}
+    public String toCurrency {get; set;}
+    public Decimal convertedAmount {get; set;}
+    public Boolean showResult {get; set;}
+    
+    public Map<String,Decimal> conversionRates=new Map<String,Decimal>{
+        'USD'=>1.0,
+        'INR'=>0.012,
+        'Pound'=>1.33,
+        'Euro'=>1.13,
+        'Yen'=>0.0069
+    };
+    
+    public List<SelectOption> getCurrencyOptions()
+    {
+        List<SelectOption> options =new List<SelectOption>();
+        for(String key:conversionRates.keySet())
+        {
+            options.add(new SelectOption(key,key));
+        }
+        return options;
+    }
+    
+    public void convertCurrency()
+    {
+        showResult=false;
+        if(conversionRates.containsKey(fromCurrency) && conversionRates.containsKey(toCurrency))
+        {
+            Decimal amountInUSD=amount*conversionRates.get(fromCurrency);
+            convertedAmount=amountInUSD / conversionRates.get(toCurrency);
+            showResult=true;
+        }
+  }
+}
+
+------------------UI----------------
+<apex:page controller="CurrencyConverter">
+    
+    <apex:form >
+        <apex:pageBlock title="Currency Converter">
+            <!-- Input Section -->
+            <apex:pageBlockSection columns="2">
+                
+                <apex:outputLabel value="From Currency: " />
+                <apex:selectList value="{!fromCurrency}">
+                    <apex:selectOptions value="{!currencyOptions}"/>
+                </apex:selectList>
+                
+                <apex:outputLabel value="To Currency: " />
+                <apex:selectList value="{!toCurrency}">
+                    <apex:selectOptions value="{!currencyOptions}" />
+                </apex:selectList>
+                
+                <apex:outputLabel value="Amount: " />
+                <apex:inputText value="{!amount}" />
+                
+                <apex:outputLabel value="" />
+                <apex:commandButton value="Convert!" action="{!convertCurrency}" reRender="resultBlock" />
+                
+            </apex:pageBlockSection>
+            
+            <!-- Output Section -->
+            <apex:outputPanel id="resultBlock">
+                <apex:outputPanel rendered="{!showResult}">
+                    <apex:outputText value="Converted Amount = {!convertedAmount}" />
+                </apex:outputPanel>
+            </apex:outputPanel>
+         
+        </apex:pageBlock>
+    </apex:form>
+    
+    
+</apex:page>

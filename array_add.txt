@@ -1,0 +1,73 @@
+//------------- Array Addition -----------------//
+public class ArrayAddition
+{
+    public String array1 {get; set;}
+    public String array2 {get; set;}
+    public String resultString {get; set;}
+    
+    public List<Integer> getArray1()
+    {
+        return parseArray(array1);
+    }
+    
+    public List<Integer> getArray2()
+    {
+        return parseArray(array2);
+    }
+    
+    public List<Integer> parseArray(String input)
+    {
+        List<Integer> result=new List<Integer>();
+        if(input!=null && !String.isBlank(input))
+        {
+            String[] stringArray=input.split(',');
+            for(String s:stringArray)
+            {
+                result.add(Integer.valueOf(s.trim()));
+            }
+        }
+        return result;
+    }
+    
+    public void addArrays()
+    {
+        List<Integer> arr1=getArray1();
+        List<Integer> arr2=getArray2();
+        
+        if(arr1.size()!=arr2.size())
+        {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error,'Array sizes must be same'));
+            return;
+        }
+        
+        List<Integer> result=new List<Integer>();
+        for(Integer i=0;i<arr1.size();i++)
+        {
+            result.add(arr1[i]+arr2[i]);
+            resultString+=result[i]+(i==arr1.size()-1?'':',');
+        }
+        ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.INFO,resultString));
+    }   
+}
+
+--------------UI---------------
+<apex:page controller="ArrayAddition">
+    <h1>Array Addition</h1>
+
+    <!-- Form to enter two arrays -->
+    <apex:form >
+           
+        <h3>Enter the First Array (comma separated values):</h3>
+        <apex:inputText value="{!array1}" label="Array 1" />
+        
+        <h3>Enter the Second Array (comma separated values):</h3>
+        <apex:inputText value="{!array2}" label="Array 2" />
+        
+        <apex:commandButton value="Add Arrays" action="{!addArrays}" rerender="result" />
+    </apex:form>
+
+    <!-- Display result -->
+    <apex:outputPanel id="result">
+        <apex:pageMessages />
+    </apex:outputPanel>
+</apex:page>

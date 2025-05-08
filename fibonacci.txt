@@ -1,0 +1,57 @@
+//------------------Fibonacci Series -------------------------//
+public class FibonacciSeries {
+    public Integer terms { get; set; }
+    public List<Integer> series { get; set; }
+
+    public void generateSeries() {
+        series = new List<Integer>();
+        Integer a = 0, b = 1;
+
+        if (terms == 1) {
+            series.add(a);
+        } else if (terms >= 2) {
+            series.add(a);
+            series.add(b);
+            for (Integer i = 2; i < terms; i++) {
+                Integer next = a + b;
+                series.add(next);
+                a = b;
+                b = next;
+            }
+        }
+    }
+
+    // To display series in a single line separated by commas
+	public String getDisplaySeries() {
+        if (series == null) return '';
+        
+        String strList;
+        for (Integer i=0;i<series.size();i++) {
+            strList+=String.valueOf(series[i])+(i==series.size()-1?'':',');
+        }
+        return strList;
+    }
+}
+
+--------------UI------------
+apex:page controller="FibonacciSeries">
+    <apex:form >
+        <apex:pageBlock title="Fibonacci Series Generator">
+            
+            <apex:pageBlockSection columns="2">
+                <apex:outputLabel value="Enter number of terms:" for="termsInput"/>
+                <apex:inputText id="termsInput" value="{!terms}" />
+                
+                <apex:outputLabel value="" />
+                <apex:commandButton value="Generate" action="{!generateSeries}" reRender="resultBlock" />
+            </apex:pageBlockSection>
+
+            <apex:outputPanel id="resultBlock">
+                <apex:pageBlockSection title="Fibonacci Series" rendered="{!NOT(ISNULL(series)) && series.size > 0}">
+                    <apex:outputText value="{!displaySeries}" />
+                </apex:pageBlockSection>
+            </apex:outputPanel>
+
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

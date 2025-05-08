@@ -1,0 +1,68 @@
+//------------------Simple Interest and Compound Interest-------------------------//
+public class InterestCalculatorController
+{
+    public Decimal principal { get; set; }
+    public Decimal rate { get; set; }          // Annual interest rate in %
+    public Decimal timePeriod { get; set; }    // Time in years
+    public Integer n { get; set; } 
+
+    public Decimal simpleInterest {get; set;}
+    public Decimal compoundInterest {get; set;}
+    
+    public void calculateInterest()
+    {
+        if(principal!=null && rate!=null && timePeriod !=null)
+        {
+            simpleInterest=(principal*rate*timePeriod)/100;
+        }
+        
+        if(n!=null && n>0)
+        {
+            Double p=principal.doubleValue();
+            Double r=rate.doubleValue();
+            Double t=timePeriod.doubleValue();
+            Double base=(1+(r/(n*100)));
+            Double exponent=n*t;
+            Double amount=p*Math.pow(base,exponent);
+            compoundInterest=amount-p;
+        }
+        else
+        {
+            compoundInterest=null;
+        }
+    }
+}
+
+-----------------UI--------------
+<apex:page controller="InterestCalculatorController">
+    <apex:form >
+        <apex:pageBlock title="Interest Calculator">
+            
+            <apex:pageBlockSection columns="2">
+                <apex:outputLabel value="Principal:" />
+                <apex:inputText value="{!principal}" />
+
+                <apex:outputLabel value="Rate (% per annum):" />
+                <apex:inputText value="{!rate}" />
+
+                <apex:outputLabel value="Time Period (years):" />
+                <apex:inputText value="{!timePeriod}" />
+
+                <apex:outputLabel value="Compounding Frequency (n):" />
+                <apex:inputText value="{!n}" />
+            </apex:pageBlockSection>
+
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Calculate" action="{!calculateInterest}" reRender="resultBlock" />
+            </apex:pageBlockButtons>
+
+            <apex:outputPanel id="resultBlock">
+                <apex:pageBlockSection title="Results" columns="1">
+                    <apex:outputText value="Simple Interest: {!simpleInterest}" rendered="{!NOT(ISNULL(simpleInterest))}" />
+                    <apex:outputText value="Compound Interest: {!compoundInterest}" rendered="{!NOT(ISNULL(compoundInterest))}" />
+                </apex:pageBlockSection>
+            </apex:outputPanel>
+            
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

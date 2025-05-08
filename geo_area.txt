@@ -1,0 +1,78 @@
+//-------------- Geometry Area Calculator ----------------------//
+public class GeometryAreaCalculator
+{
+    public Decimal radius {get; set;}
+    public Decimal length {get; set;}
+    public Decimal breadth {get; set;}
+    public Decimal base {get; set;}
+    public Decimal height {get; set;}
+    public Decimal area {get; set;}
+    public String shapeType {get; set;}
+    
+    public void calculateArea()
+    {
+        if(shapeType=='Circle')
+        {
+            area=Math.PI*radius*radius;
+        }
+        else if(shapeType=='Rectangle')
+        {
+            area=length*breadth;
+        }
+        else if(shapeType=='Triangle')
+        {
+            area=0.5*base*height;
+        }
+        else
+        {
+            area=0;
+        }
+    }
+    
+    public List<SelectOption> getShapeOptions()
+    {
+        return new List<SelectOption>{
+            new SelectOption('Circle','Circle'),
+            new SelectOption('Rectangle','Rectangle'),
+            new SelectOption('Triangle','Triangle')
+        };
+    }
+}
+
+------------UI-----------
+<apex:page controller="GeometryAreaCalculator">
+    <apex:form >
+        <apex:pageBlock title="Geometry Area Calculator">
+            
+            <apex:pageBlockSection columns="2">
+                <apex:outputLabel value="Select Shape" />
+                <apex:selectList value="{!shapeType}" size="1">
+                    <apex:selectOptions value="{!shapeOptions}" />
+                </apex:selectList>
+
+                <apex:outputLabel value="Radius (for Circle)" />
+                <apex:inputText value="{!radius}" />
+
+                <apex:outputLabel value="Length (for Rectangle)" />
+                <apex:inputText value="{!length}" />
+
+                <apex:outputLabel value="Breadth (for Rectangle)" />
+                <apex:inputText value="{!breadth}" />
+
+                <apex:outputLabel value="Base (for Triangle)" />
+                <apex:inputText value="{!base}" />
+
+                <apex:outputLabel value="Height (for Triangle)" />
+                <apex:inputText value="{!height}" />
+            </apex:pageBlockSection>
+
+            <apex:commandButton value="Calculate Area" action="{!calculateArea}" reRender="resultPanel" />
+            
+            <apex:outputPanel id="resultPanel">
+                <apex:outputText value="Area: {!area}" rendered="{!NOT(ISNULL(area))}" />
+            </apex:outputPanel>
+
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>
+
